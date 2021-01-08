@@ -3,31 +3,39 @@ import logo from './logo.svg';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './App.css';
 import MovieList from './components/MovieList';
+import SearchBar from './components/SearchBar';
+
 
 
 const App = () =>  {
 
   const [movies, setMovies] = useState([]);
+  const [searchQuery, setSearchQuery] = useState('');
 
-  const getMovies = async () => {
-    const url = 'http://www.omdbapi.com/?s=harry potter&apikey=dc007d29';
+
+  const getMovies = async (searchQuery) => {
+    const url = `http://www.omdbapi.com/?s=${searchQuery}&apikey=dc007d29`;
     const res = await fetch(url);
     const resJson = await res.json();
 
     if (resJson.Search) {
       setMovies(resJson.Search);
+
     }
   };
 
   useEffect(() => {
-		getMovies();
-	}, []);
+		getMovies(searchQuery);
+	}, [searchQuery]);
 
   
   return (
 		<div className='container-fluid'>
+      <SearchBar searchQuery={searchQuery} setSearchQuery={setSearchQuery} />
+
 			<div className='row'>
 				<MovieList movies={movies} />
+
 			</div>
 		</div>
 	);
